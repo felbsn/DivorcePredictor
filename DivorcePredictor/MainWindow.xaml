@@ -1,0 +1,172 @@
+﻿<Window x:Class="DivorcePredictor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DivorcePredictor"
+        mc:Ignorable="d"
+        Title="Divorce Predictor v0.02a" Height="450" Width="800">
+    <Window.Resources>
+
+        <Style x:Key="xRadioButton" TargetType="{x:Type RadioButton}">
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <ToggleButton   IsChecked="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                              Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" Background="Transparent">
+                            <ToggleButton.Style>
+                                <Style TargetType="ToggleButton">
+                                    <Setter Property="OverridesDefaultStyle" Value="True"/>
+                                    <Setter Property="Margin" Value="5"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate   TargetType="ToggleButton">
+                                                <Border Name="border" 
+                                                BorderThickness="1"
+                                                Padding="4,2" 
+                                                BorderBrush="DarkGray" 
+                                                CornerRadius="3" 
+                                                Background="{TemplateBinding Background}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="border" Property="BorderBrush" Value="Black" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsChecked" Value="true">
+                                                        <Setter TargetName="border" Property="Background" Value="Green"/>
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        
+
+
+    </Window.Resources>
+    <Grid>
+
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="300"/>
+
+        </Grid.ColumnDefinitions>
+        
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <ListView x:Name="xlist" Margin="0">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border Width="{Binding ActualWidth, ElementName=xlist}" Padding="0 0 30 0" BorderThickness="0">
+                        <Border BorderThickness="1" CornerRadius="3" Margin="0 0 0 0" BorderBrush="Gray">
+
+                            <StackPanel  MaxWidth="{Binding ActualWidth, ElementName=xlist}" Margin="0">
+
+                                <TextBlock Text="{Binding Text}"   Margin="0" FontSize="18" TextWrapping="Wrap"  />
+
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+                                    <Border  BorderThickness="1" CornerRadius="2"  Margin="6">
+                                        <RadioButton FontSize="16" Style="{StaticResource xRadioButton}" GroupName="{Binding Group}" Content="Never" IsChecked="{Binding A0, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Border>
+                                    <Border   BorderThickness="1" CornerRadius="2" Margin="6">
+                                        <RadioButton FontSize="16" Style="{StaticResource xRadioButton}" GroupName="{Binding Group}" Content="No" IsChecked="{Binding A1, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Border>
+                                    <Border  BorderThickness="1" CornerRadius="2"  Margin="6">
+                                        <RadioButton FontSize="16" Style="{StaticResource xRadioButton}"  GroupName="{Binding Group}" Content="NEUTRAL" IsChecked="{Binding A2, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Border>
+                                    <Border  BorderThickness="1" CornerRadius="2"  Margin="6">
+                                        <RadioButton FontSize="16" Style="{StaticResource xRadioButton}" GroupName="{Binding Group}" Content="Yes" IsChecked="{Binding A3, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Border>
+                                    <Border   BorderThickness="1" CornerRadius="2"  Margin="6">
+                                        <RadioButton FontSize="16" Style="{StaticResource xRadioButton}" GroupName="{Binding Group}" Content="Always" IsChecked="{Binding A4, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Border>
+
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Border>
+
+                 
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+
+
+        </ListView>
+
+
+        <DockPanel Grid.Row="1" Margin="10">
+            <Button Content="Predict" x:Name="predictButton" Height="26" VerticalAlignment="Top" Click="predictButton_Click"/>
+            <Label Content="Prediction:"/>
+            <Label x:Name="predictResultLabel" Content="" />
+
+        </DockPanel>
+
+
+        <GridSplitter Grid.RowSpan ="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></GridSplitter>
+
+
+        <Grid Grid.RowSpan="3" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <DockPanel >
+                <Label  Content="K-Folds"/>
+                <ComboBox x:Name="KFolds">
+                    <ComboBoxItem Tag="20"  Content="20"/>
+                    <ComboBoxItem Tag="10" Content="10"/>
+                    <ComboBoxItem Tag="6"  Content="6"/>
+                    <ComboBoxItem Tag="5"  Content="5"/>
+                    <ComboBoxItem Tag="2"  Content="2"/>
+                    <ComboBoxItem Tag="0"  Content="0 (no validation)"/>
+                </ComboBox>
+                <Label  Content="TreeNum"/>
+                <ComboBox x:Name="treeComboBox" SelectionChanged="Tree_SelectionChanged"/>
+                
+                <Button Content="Train" Click="Button_Click"/>
+
+            </DockPanel>
+
+            <TreeView Grid.Row="1" x:Name="xtree">
+
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="TreeViewItem">
+                        <Setter Property="IsExpanded" Value="True" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding ChildNodes}">
+                        <Label Content="{Binding Details}" Margin="10,0,0,0"/>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+        </Grid>
+
+   
+        
+    </Grid>
+</Window>
